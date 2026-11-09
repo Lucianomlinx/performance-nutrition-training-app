@@ -457,7 +457,7 @@ export default function Dashboard() {
                 </div>
                 <div className="hero-meter"><span style={{ width: `${clampPercent(totals.calories, GOALS.calories)}%` }} /></div>
                 <div className="hero-footer">
-                  <span><ShieldCheck size={16} /> Proteína intocável: 138 g/dia (1,75g/kg)</span>
+                  <span><ShieldCheck size={16} /> Proteína intocável: 140 g/dia</span>
                   <button type="button" onClick={() => navigate("nutrition")}>Ver refeições <ArrowRight size={16} /></button>
                 </div>
               </div>
@@ -481,7 +481,7 @@ export default function Dashboard() {
                 <div className="tiny-icon"><Activity size={17} /></div>
               </div>
               <h3>Distribuição Diária Calórica</h3>
-              <p>Carbos (47% • 228g) | Proteínas (28% • 138g) | Gorduras (25% • 54g)</p>
+              <p>Carbos (47% • 228g) | Proteínas (28% • 140g) | Gorduras (25% • 54g)</p>
               <div className="macro-list">
                 <MacroBar label="Proteínas" value={totals.protein} goal={GOALS.protein} unit="g" tone="lime" note="SÍNTESE MÁXIMA" />
                 <MacroBar label="Carboidratos" value={totals.carbs} goal={GOALS.carbs} unit="g" tone="orange" note="AREIA & GLICOGÊNIO" />
@@ -489,7 +489,7 @@ export default function Dashboard() {
               </div>
               <div className="macro-footer">
                 <span className="macro-footer-icon"><Info size={15} /></span>
-                <span>{proteinLeft > 0 ? `Faltam ${formatInt(proteinLeft)} g de proteína para a meta de 138 g.` : "Meta de proteína de 138g alcançada. Parabéns!"}</span>
+                <span>{proteinLeft > 0 ? `Faltam ${formatInt(proteinLeft)} g de proteína para a meta de 140 g.` : "Meta de proteína de 140g alcançada. Parabéns!"}</span>
               </div>
             </section>
           </div>
@@ -638,7 +638,7 @@ export default function Dashboard() {
                 <span><Flame size={18} /></span>
                 <div>
                   <strong>Regra de ouro do dossiê:</strong>
-                  <p>138g de proteína garante preservação de massa magra. Carbos sustentam a explosão na areia.</p>
+                  <p>140g de proteína garante preservação de massa magra. Carbos sustentam a explosão na areia.</p>
                 </div>
               </div>
             </div>
@@ -660,7 +660,7 @@ export default function Dashboard() {
         {view === "nutrition" && <div className="view-content nutrition-view">
           <div className="compact-stats-grid">
             <CompactStat icon={Flame} label="Calorias" value={`${formatInt(totals.calories)} / 1.950`} detail="kcal consumidas" tone="orange" />
-            <CompactStat icon={ShieldCheck} label="Proteínas" value={`${formatInt(totals.protein)} / 138`} detail="gramas · síntese máxima" tone="green" />
+            <CompactStat icon={ShieldCheck} label="Proteínas" value={`${formatInt(totals.protein)} / 140`} detail="gramas · síntese máxima" tone="green" />
             <CompactStat icon={Zap} label="Carboidratos" value={`${formatInt(totals.carbs)} / 228`} detail="gramas · areia & glicogênio" tone="violet" />
             <CompactStat icon={Droplets} label="Gorduras" value={`${formatInt(totals.fat)} / 54`} detail="gramas · teto hormonal" tone="blue" />
           </div>
@@ -1086,7 +1086,7 @@ export default function Dashboard() {
               <div className="metabolic-item highlight">
                 <span className="metabolic-label">Meta Calórica da Dieta</span>
                 <strong>{METABOLIC_STATS.dietGoal} <small>kcal/dia</small></strong>
-                <p>Déficit planejado com 138g de proteína para preservar massa magra.</p>
+                <p>Déficit planejado com 140g de proteína para preservar massa magra.</p>
               </div>
               <div className="metabolic-item">
                 <span className="metabolic-label">Déficit Diário Planejado</span>
@@ -1267,7 +1267,7 @@ export default function Dashboard() {
 
               <div className="progress-reminder">
                 <HeartPulse size={21} />
-                <p>O déficit controlado (1.950 kcal) com 138g de proteína garante recomposição sem perda de glicogênio na areia.</p>
+                <p>O déficit controlado (1.950 kcal) com 140g de proteína garante recomposição sem perda de glicogênio na areia.</p>
               </div>
             </aside>
           </div>
@@ -1289,7 +1289,7 @@ export default function Dashboard() {
 
           <div className="guide-target-grid">
             <div><span>01 / CARBOIDRATOS (47%)</span><strong>228 g</strong><p>~912 kcal • Energia para futevôlei e hipertrofia.</p></div>
-            <div><span>02 / PROTEÍNAS (28%)</span><strong>138 g</strong><p>~552 kcal • 1,75g/kg • Síntese proteica máxima.</p></div>
+            <div><span>02 / PROTEÍNAS (28%)</span><strong>140 g</strong><p>~560 kcal • 1,75g/kg • Síntese proteica máxima.</p></div>
             <div><span>03 / LIPÍDIOS (25%)</span><strong>54 g</strong><p>~486 kcal • Suporte hormonal e controle de azeite.</p></div>
             <div><span>04 / HIDRATAÇÃO BASE</span><strong>3,5L–4,0L</strong><p>1,5L a 2,0L antes das 11h30 e 400ml no jantar.</p></div>
           </div>
@@ -1326,7 +1326,7 @@ export default function Dashboard() {
               </div>
               <div className="swap-list">
                 <div className="swap-row"><span>Peito de Frango + 1 Ovo</span><strong>100g a 110g frango + 1 ovo inteiro (Padrão mais econômico)</strong></div>
-                <div className="swap-row"><span>Peito de Frango Puro</span><strong>150g (Almoço) ou 130g (Jantar sem ovo)</strong></div>
+                <div className="swap-row"><span>Peito de Frango Puro</span><strong>150g (Almoço) ou 140g (Jantar sem ovo)</strong></div>
                 <div className="swap-row"><span>Cortes Bovinos Magros</span><strong>130g a 140g (Patinho, Músculo ou Acém magro)</strong></div>
                 <div className="swap-row"><span>Lombo Suíno</span><strong>140g</strong></div>
                 <div className="swap-row"><span>Atum + Ovos</span><strong>1 lata atum + 2 ovos inteiros (zerar azeite)</strong></div>
@@ -1438,7 +1438,7 @@ export default function Dashboard() {
 
         <footer className="main-footer">
           <span>pulso<span className="footer-dot">.</span> <span className="footer-separator">/</span> dossiê clínico ativo</span>
-          <span>1.950 kcal • 138g proteína • 3,5L a 4,0L água</span>
+          <span>1.950 kcal • 140g proteína • 3,5L a 4,0L água</span>
         </footer>
       </main>
 
