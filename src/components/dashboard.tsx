@@ -424,24 +424,7 @@ export default function Dashboard() {
         {loading && <div className="loading-line" aria-label="Carregando dados" />}
 
         {/* Quick Voice Bar */}
-        <section className="quick-voice-strip">
-          <div className="quick-voice-left">
-            <div className="quick-voice-icon"><Mic size={18} /></div>
-            <div>
-              <strong>Assistente de Voz & Diário Inteligente</strong>
-              <p>Diga ou digite: <em>"almocei, e bebi 1 litro e 200 de agua"</em> ou <em>"comi a paçoca"</em></p>
-            </div>
-          </div>
-          <div className="quick-voice-actions">
-            <button type="button" className={`voice-rec-btn ${isListening ? "listening" : ""}`} onClick={isListening ? stopListening : startListening} title={isListening ? "Parar de ouvir" : "Falar por voz"}>
-              {isListening ? <MicOff size={16} /> : <Mic size={16} />}
-              <span>{isListening ? "Ouvindo..." : "Falar agora"}</span>
-            </button>
-            <button type="button" className="voice-open-btn" onClick={() => setModal("chat")}>
-              <MessageSquare size={16} /> Abrir Chat
-            </button>
-          </div>
-        </section>
+
 
         {view === "overview" && <div className="view-content overview-view">
           <div className="hero-grid">

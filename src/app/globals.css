@@ -643,3 +643,13 @@ h1,h2,h3,p{margin-top:0}
 .hero-footer{grid-column:1/-1;grid-row:5;position:relative;left:auto;right:auto;bottom:auto;width:100%;margin-top:0;padding-top:13px;z-index:2}
 }
 @media(max-width:350px){.calorie-hero{grid-template-columns:minmax(0,1fr) 130px;padding:19px 16px}.calorie-ring-wrap{width:130px;height:130px}.hero-consumed>strong{font-size:31px}.hero-consumed span{font-size:8px}}
+
+/* Ajuste de segurança para o Notch/Dynamic Island do iPhone */
+@media (max-width: 768px) {
+  .mobile-brand {
+    padding-top: calc(env(safe-area-inset-top) + 12px) !important;
+  }
+  .main-area {
+    padding-top: env(safe-area-inset-top);
+  }
+}
