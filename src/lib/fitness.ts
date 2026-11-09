@@ -1,10 +1,10 @@
 export const GOALS = { calories: 1950, protein: 140, carbs: 228, fat: 54 } as const;
 export type TrainingMode = "musculacao" | "futevolei" | "dobradinha" | "descanso";
 export type FocusKey = "treinoA" | "treinoB" | "treinoC";
-export type CarbKey = "arroz" | "macarrao" | "macaxeira" | "cuscuz" | "tapioca" | "pao" | "batata";
-export type ProteinKey = "frangoPuro" | "carneMagra" | "frangoOvo" | "lomboAtum";
-export type SnackKey = "iogurteWhey" | "romeuJulieta" | "paoFrango";
-export type TriggerKey = "pacoca" | "banana" | "azeitonas";
+export type CarbKey = "arroz" | "macarrao" | "macaxeira" | "cuscuz" | "tapioca" | "pao" | "batata" | "aveia" | "batataDoce";
+export type ProteinKey = "frangoPuro" | "carneMagra" | "frangoOvo" | "lomboAtum" | "claraOvo";
+export type SnackKey = "aveiaWhey" | "romeuJulieta" | "paoFrango" | "wheyLiquido";
+export type TriggerKey = "pacoca" | "banana" | "azeitonas" | "melancia";
 export type MealSlot = "almoco" | "lanche" | "gatilho" | "jantar" | "extra";
 export type Macros = { calories: number; protein: number; carbs: number; fat: number };
 
@@ -27,7 +27,7 @@ export const DEFAULT_SETTINGS: DaySettings = {
   workoutFocus: "treinoA",
   lunchCarb: "arroz",
   lunchProtein: "frangoPuro",
-  snackOption: "iogurteWhey",
+  snackOption: "aveiaWhey",
   triggerOption: "pacoca",
   dinnerCarb: "macaxeira",
   dinnerProtein: "frangoPuro",
@@ -112,14 +112,135 @@ export const CARB_OPTIONS: Record<CarbKey, { label: string; amount: string; macr
   tapioca: { label: "Goma de Tapioca", amount: "60 g", macros: { calories: 144, protein: 0.1, carbs: 35.4, fat: 0.1 } },
   pao: { label: "Pão de Forma Integral (2 fatias)", amount: "50 g", macros: { calories: 135, protein: 4.4, carbs: 27.0, fat: 0.9 } },
   batata: { label: "Batata Inglesa / Doce", amount: "120 g", macros: { calories: 104, protein: 2.4, carbs: 24.0, fat: 0.1 } },
+  aveia: { label: "Aveia em Flocos", amount: "50 g", macros: { calories: 195, protein: 8.5, carbs: 33.2, fat: 3.5 } },
+  batataDoce: { label: "Batata Doce Cozida", amount: "150 g", macros: { calories: 129, protein: 2.4, carbs: 30.2, fat: 0.2 } },
 };
 
-// OPÇÕES DE PROTEÍNA AJUSTADAS PROTOCOLO TG (Densidade para 140g)
-export const PROTEIN_OPTIONS: Record<ProteinKey, { label: string; amount: string; note: string }> = {
-  frangoPuro: { label: "Peito de Frango (Alta Densidade)", amount: "150g (Almoço) ou 140g (Jantar)", note: "Filé grelhado ou desfiado. Garante ~45-48g de proteína p/ refeição." },
-  carneMagra: { label: "Cortes Bovinos Magros (Patinho/Músculo)", amount: "150g (Almoço) ou 140g (Jantar)", note: "Excelente para saciedade estendida. Evitar cortes gordos." },
-  frangoOvo: { label: "Frango + Ovos (Volumoso)", amount: "110g de Frango + 3 Ovos Inteiros", note: "Opção para jantar: alto poder de saciedade por volume." },
-  lomboAtum: { label: "Lombo Suíno ou Tilápia", amount: "150g Lombo OU 200g de Tilápia", note: "Opções de digestão leve." },
+// OPÇÕES DE PROTEÍNA AJUSTADAS PROTOCOLO TG (Densidade de ~31-32g P/100g conforme Matriz de Alimentos Base)
+// lunchMacros/dinnerMacros já incluem eventuais extras (azeite, ovos, whey) da combinação descrita.
+export const PROTEIN_OPTIONS: Record<ProteinKey, {
+  label: string;
+  amount: string;
+  note: string;
+  lunchIngredient: string;
+  lunchMacros: Macros;
+  dinnerIngredient: string;
+  dinnerMacros: Macros;
+}> = {
+  frangoPuro: {
+    label: "Peito de Frango (Alta Densidade)",
+    amount: "150g (Almoço) ou 140g (Jantar)",
+    note: "Filé grelhado ou desfiado. Garante ~45-48g de proteína p/ refeição.",
+    lunchIngredient: "150g de Peito de Frango (filé ou desfiado) + 5 ml de Azeite de Oliva Extra Virgem",
+    lunchMacros: { calories: 278, protein: 46.5, carbs: 0, fat: 10.4 },
+    dinnerIngredient: "140g de Peito de Frango (filé/desfiado)",
+    dinnerMacros: { calories: 218, protein: 43.4, carbs: 0, fat: 5.0 },
+  },
+  carneMagra: {
+    label: "Cortes Bovinos Magros (Patinho/Músculo)",
+    amount: "150g (Almoço) ou 140g (Jantar)",
+    note: "Excelente para saciedade estendida. Evitar cortes gordos.",
+    lunchIngredient: "150g de Patinho ou Músculo magro",
+    lunchMacros: { calories: 260, protein: 48.0, carbs: 0, fat: 7.5 },
+    dinnerIngredient: "140g de Patinho/Músculo",
+    dinnerMacros: { calories: 242, protein: 44.8, carbs: 0, fat: 7.0 },
+  },
+  frangoOvo: {
+    label: "Frango + Ovos (Volumoso)",
+    amount: "110g de Frango + 3 Ovos Inteiros",
+    note: "Opção para jantar: alto poder de saciedade por volume.",
+    lunchIngredient: "110g de Frango Desfiado + 3 Ovos inteiros mexidos",
+    lunchMacros: { calories: 382, protein: 53.0, carbs: 1.2, fat: 18.4 },
+    dinnerIngredient: "110g de Frango Desfiado + 3 Ovos inteiros mexidos",
+    dinnerMacros: { calories: 382, protein: 53.0, carbs: 1.2, fat: 18.4 },
+  },
+  lomboAtum: {
+    label: "Lombo Suíno ou Tilápia",
+    amount: "150g Lombo OU 200g de Tilápia",
+    note: "Opções de digestão leve.",
+    lunchIngredient: "150g de Lombo Suíno grelhado ou 200g de Tilápia",
+    lunchMacros: { calories: 230, protein: 39.0, carbs: 0, fat: 8.3 },
+    dinnerIngredient: "140g de Lombo Suíno grelhado ou 190g de Tilápia",
+    dinnerMacros: { calories: 214, protein: 36.4, carbs: 0, fat: 7.7 },
+  },
+  claraOvo: {
+    label: "Claras de Ovo + Whey (Ultra Leve)",
+    amount: "200g de Claras (Almoço) ou 170g (Jantar) + 1 Scoop de Whey",
+    note: "Baixíssima gordura e esvaziamento gástrico rápido: indicado em dias de apetite travado ou risco de refluxo pela Tirzepatida (Regra 3 do Protocolo).",
+    lunchIngredient: "200g de Claras de Ovo cozidas/mexidas + 30g de Whey Protein batido com água gelada",
+    lunchMacros: { calories: 222, protein: 46.0, carbs: 3.0, fat: 2.0 },
+    dinnerIngredient: "170g de Claras de Ovo cozidas/mexidas + 30g de Whey Protein batido com água gelada",
+    dinnerMacros: { calories: 206, protein: 42.7, carbs: 3.0, fat: 1.8 },
+  },
+};
+
+// OPÇÕES DE LANCHE PRÉ-TREINO (Protocolo TG)
+export const SNACK_OPTIONS: Record<SnackKey, { title: string; ingredients: string[]; macros: Macros }> = {
+  aveiaWhey: {
+    title: "Aveia, Whey & Fruta",
+    ingredients: [
+      "40g de Aveia em Flocos",
+      "30g de Whey Protein (1 scoop)",
+      "70g de Banana média",
+    ],
+    macros: { calories: 356, protein: 37.8, carbs: 46.2, fat: 2.1 },
+  },
+  romeuJulieta: {
+    title: "Protocolo Romeu & Julieta + Whey",
+    ingredients: [
+      "1 Pão Francês (50g) ou 2 fatias de forma",
+      "1 fatia de Queijo Coalho ou Muçarela (30g)",
+      "1 fatia fina de Goiabada (25g)",
+      "1 scoop de Whey (30g) batido com água gelada",
+    ],
+    macros: { calories: 412, protein: 34.8, carbs: 52.4, fat: 8.5 },
+  },
+  paoFrango: {
+    title: "Pão com Frango & Fruta",
+    ingredients: [
+      "2 fatias de Pão de Forma (50g)",
+      "120g de Peito de Frango desfiado",
+      "1 Fruta (Banana ou Maçã)",
+    ],
+    macros: { calories: 360, protein: 40.1, carbs: 45.0, fat: 4.8 },
+  },
+  wheyLiquido: {
+    title: "Whey + Água + Banana (Apetite Travado)",
+    ingredients: [
+      "30g de Whey Protein batido só com água gelada",
+      "100g de Banana amassada ou em pedaços",
+      "Sem sólidos densos: ideal em dias de empachamento pela Tirzepatida",
+    ],
+    macros: { calories: 207, protein: 25.1, carbs: 24.8, fat: 1.8 },
+  },
+};
+
+// OPÇÕES DE GATILHO ERGOGÊNICO (17h00, pré-areia)
+export const TRIGGER_OPTIONS: Record<TriggerKey, { title: string; ingredients: string[]; macros: Macros; clinicalNote: string }> = {
+  pacoca: {
+    title: "Energia Rápida: 1 Paçoca (20g)",
+    ingredients: ["1 Paçoca rolha/retangular (20g) 15 min antes da areia", "Absorção de energia com gordura de amendoim"],
+    macros: { calories: 92, protein: 2.5, carbs: 11.2, fat: 5.1 },
+    clinicalNote: "15 min antes da areia para evitar hipoglicemia pós-TG.",
+  },
+  banana: {
+    title: "Energia Rápida: 1 Banana Média",
+    ingredients: ["1 Banana média (70g-80g) 15 min antes do treino", "Carboidrato de rápida digestão"],
+    macros: { calories: 89, protein: 1.1, carbs: 22.8, fat: 0.3 },
+    clinicalNote: "15 min antes da areia para evitar hipoglicemia pós-TG.",
+  },
+  azeitonas: {
+    title: "Bomba de Sódio (Pernas): 6-8 Azeitonas",
+    ingredients: ["6 a 8 Azeitonas em conserva + 350ml de água gelada", "Retém líquido intravascular"],
+    macros: { calories: 85, protein: 0.8, carbs: 2.0, fat: 8.2 },
+    clinicalNote: "15 min antes da areia para evitar hipoglicemia pós-TG.",
+  },
+  melancia: {
+    title: "Hidratação Leve: Melancia (150g)",
+    ingredients: ["150g de Melancia gelada 15 min antes do treino", "Alto teor de água + carboidrato de rapidíssima digestão"],
+    macros: { calories: 45, protein: 0.9, carbs: 11.4, fat: 0.2 },
+    clinicalNote: "Opção ideal em dias de empachamento/refluxo pela Tirzepatida: digestão quase imediata.",
+  },
 };
 
 export const WORKOUTS: Record<FocusKey, { id: string; name: string; sets: string; rest: string; substitute: string; biomechanics: string }[]> = {
@@ -187,82 +308,44 @@ export function getFocusSubtitle(focus: FocusKey): string {
 export function getPlannedMeals(settings: DaySettings): PlannedMeal[] {
   const isDouble = settings.trainingMode === "dobradinha";
 
-  // 1. Almoço Estrutural (11h30) - Protocolo TG (Densidade P: ~48g)
+  // 1. Almoço Estrutural (11h30) - Protocolo TG (Densidade P: ~46-53g)
   const lunchCarb = CARB_OPTIONS[settings.lunchCarb];
+  const lunchProtein = PROTEIN_OPTIONS[settings.lunchProtein];
   const lunchIngredients = [
     `${lunchCarb.amount} de ${lunchCarb.label}`,
-    settings.lunchProtein === "carneMagra" ? "150g de Patinho ou Músculo magro" : "150g de Peito de Frango (filé ou desfiado)",
+    lunchProtein.lunchIngredient,
     "Salada ou Vinagrete (ácido acético otimiza absorção)",
-    "5 ml de Azeite de Oliva Extra Virgem (se frango)",
   ];
-  const lunchMacros: Macros = settings.lunchProtein === "carneMagra"
-    ? { calories: 328 + lunchCarb.macros.calories, protein: 53.8 + lunchCarb.macros.protein, carbs: lunchCarb.macros.carbs, fat: 10.9 + lunchCarb.macros.fat }
-    : { calories: 238 + lunchCarb.macros.calories + 45, protein: 48.0 + lunchCarb.macros.protein, carbs: lunchCarb.macros.carbs, fat: 3.8 + lunchCarb.macros.fat + 5 }; // + azeite
+  const lunchMacros: Macros = addMacros(lunchCarb.macros, lunchProtein.lunchMacros);
 
-  // 2. Pré-Treino (Lanche - Protocolo TG: ~38g P)
-  let snackTitle = "Mingau / Shake Clássico";
-  let snackIngredients: string[] = [];
-  let snackMacros: Macros = { calories: 390, protein: 32.0, carbs: 46.0, fat: 5.2 };
-  if (settings.snackOption === "iogurteWhey") {
-    snackTitle = "Iogurte, Whey & Fruta";
-    snackIngredients = [
-      "170g de Iogurte Natural Desnatado",
-      "30g de Whey Protein (1 scoop)",
-      "70g de Banana média",
-      "20g de Tapioca em pó ou Aveia (para ajuste final de carbo)",
-    ];
-    snackMacros = { calories: 356, protein: 37.8, carbs: 46.2, fat: 2.1 };
-  } else if (settings.snackOption === "romeuJulieta") {
-    snackTitle = "Protocolo Romeu & Julieta + Whey";
-    snackIngredients = [
-      "1 Pão Francês (50g) ou 2 fatias de forma",
-      "1 fatia de Queijo Coalho ou Muçarela (30g)",
-      "1 fatia fina de Goiabada (25g)",
-      "1 scoop de Whey (30g) batido com água gelada",
-    ];
-    snackMacros = { calories: 412, protein: 34.8, carbs: 52.4, fat: 8.5 };
-  } else {
-    snackTitle = "Pão com Frango & Fruta";
-    snackIngredients = [
-      "2 fatias de Pão de Forma (50g)",
-      "120g de Peito de Frango desfiado",
-      "1 Fruta (Banana ou Maçã)",
-    ];
-    snackMacros = { calories: 360, protein: 40.1, carbs: 45.0, fat: 4.8 };
-  }
+  // 2. Pré-Treino (Lanche - Protocolo TG: ~25-40g P)
+  const snack = SNACK_OPTIONS[settings.snackOption];
+  const snackTitle = snack.title;
+  const snackIngredients = snack.ingredients;
+  const snackMacros = snack.macros;
 
   // 3. Gatilho Ergogênico (17h00)
+  const trigger = TRIGGER_OPTIONS[settings.triggerOption];
   const triggerMeal: PlannedMeal = {
     slot: "gatilho",
     time: "17:00",
-    title: settings.triggerOption === "pacoca" ? "Energia Rápida: 1 Paçoca (20g)" : settings.triggerOption === "banana" ? "Energia Rápida: 1 Banana Média" : "Bomba de Sódio (Pernas): 6-8 Azeitonas",
+    title: trigger.title,
     subtitle: "Exclusivo para sessão dupla ou treino C",
     tag: "GATILHO ERGOGÊNICO",
-    clinicalNote: "15 min antes da areia para evitar hipoglicemia pós-TG.",
-    ingredients: settings.triggerOption === "pacoca"
-      ? ["1 Paçoca rolha/retangular (20g) 15 min antes da areia", "Absorvida de energia com gordura de amendoim"]
-      : settings.triggerOption === "banana"
-      ? ["1 Banana média (70g-80g) 15 min antes do treino", "Carboidrato de rápida digestão"]
-      : ["6 a 8 Azeitonas em conserva + 350ml de água gelada", "Retém líquido intravascular"],
-    macros: settings.triggerOption === "pacoca"
-      ? { calories: 92, protein: 2.5, carbs: 11.2, fat: 5.1 }
-      : settings.triggerOption === "banana"
-      ? { calories: 89, protein: 1.1, carbs: 22.8, fat: 0.3 }
-      : { calories: 85, protein: 0.8, carbs: 2.0, fat: 8.2 },
+    clinicalNote: trigger.clinicalNote,
+    ingredients: trigger.ingredients,
+    macros: trigger.macros,
   };
 
-  // 4. Jantar Recuperativo (Até 22h00) - Protocolo TG (Densidade P: ~50g)
+  // 4. Jantar Recuperativo (Até 22h00) - Protocolo TG (Densidade P: ~36-53g)
   const dinnerCarb = CARB_OPTIONS[settings.dinnerCarb];
+  const dinnerProtein = PROTEIN_OPTIONS[settings.dinnerProtein];
   const dinnerIngredients = [
     `${dinnerCarb.amount} de ${dinnerCarb.label}`,
-    settings.dinnerProtein === "frangoOvo" ? "110g de Frango Desfiado + 3 Ovos inteiros mexidos" : settings.dinnerProtein === "carneMagra" ? "140g de Patinho/Músculo" : "140g de Peito de Frango (filé/desfiado)",
+    dinnerProtein.dinnerIngredient,
     "Salada à vontade para saciedade mecânica",
   ];
-  const dinnerMacros: Macros = settings.dinnerProtein === "frangoOvo"
-    ? { calories: 410 + dinnerCarb.macros.calories, protein: 53.2 + dinnerCarb.macros.protein, carbs: dinnerCarb.macros.carbs + 1.2, fat: 18.0 + dinnerCarb.macros.fat } // Ovos aumentam gordura boa
-    : settings.dinnerProtein === "carneMagra"
-    ? { calories: 306 + dinnerCarb.macros.calories, protein: 50.2 + dinnerCarb.macros.protein, carbs: dinnerCarb.macros.carbs, fat: 10.1 + dinnerCarb.macros.fat }
-    : { calories: 222 + dinnerCarb.macros.calories, protein: 44.8 + dinnerCarb.macros.protein, carbs: dinnerCarb.macros.carbs, fat: 3.5 + dinnerCarb.macros.fat };
+  const dinnerMacros: Macros = addMacros(dinnerCarb.macros, dinnerProtein.dinnerMacros);
 
   const baseMeals: PlannedMeal[] = [
     {

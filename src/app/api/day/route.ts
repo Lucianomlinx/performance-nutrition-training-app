@@ -1,12 +1,14 @@
 import { db } from "@/db";
 import { activityEntries, bodyMeasurements, chatMessages, dailySettings, exerciseEntries, foodEntries, supplementEntries, waterEntries } from "@/db/schema";
-import { CARB_OPTIONS, DEFAULT_SETTINGS, FOCUS_OPTIONS, MODE_OPTIONS, PROTEIN_OPTIONS, WEIGH_DAYS, WORKOUTS, shiftDay, type DaySettings, type FocusKey, type HistoryPoint, type MealSlot, type TrainingMode, type TriggerKey } from "@/lib/fitness";
+import { CARB_OPTIONS, DEFAULT_SETTINGS, FOCUS_OPTIONS, MODE_OPTIONS, PROTEIN_OPTIONS, SNACK_OPTIONS, TRIGGER_OPTIONS, WEIGH_DAYS, WORKOUTS, shiftDay, type DaySettings, type FocusKey, type HistoryPoint, type MealSlot, type TrainingMode } from "@/lib/fitness";
 import { and, eq, gte, lte } from "drizzle-orm";
 
 export const dynamic = "force-dynamic";
 
 const CARBS = Object.keys(CARB_OPTIONS);
 const PROTEINS = Object.keys(PROTEIN_OPTIONS);
+const SNACKS = Object.keys(SNACK_OPTIONS);
+const TRIGGERS = Object.keys(TRIGGER_OPTIONS);
 const SLOTS: MealSlot[] = ["almoco", "lanche", "gatilho", "jantar", "extra"];
 const MODES = MODE_OPTIONS.map((item) => item.key);
 const FOCUSES = FOCUS_OPTIONS.map((item) => item.key);
@@ -117,8 +119,8 @@ export async function POST(request: Request) {
       if (FOCUSES.includes(updatesInput.workoutFocus as FocusKey)) updates.workoutFocus = updatesInput.workoutFocus as FocusKey;
       if (CARBS.includes(updatesInput.lunchCarb as string)) updates.lunchCarb = updatesInput.lunchCarb as DaySettings["lunchCarb"];
       if (PROTEINS.includes(updatesInput.lunchProtein as string)) updates.lunchProtein = updatesInput.lunchProtein as DaySettings["lunchProtein"];
-      if (["aveiaWhey", "romeuJulieta", "paoFrango"].includes(updatesInput.snackOption as string)) updates.snackOption = updatesInput.snackOption as DaySettings["snackOption"];
-      if (["pacoca", "banana", "azeitonas"].includes(updatesInput.triggerOption as string)) updates.triggerOption = updatesInput.triggerOption as TriggerKey;
+      if (SNACKS.includes(updatesInput.snackOption as string)) updates.snackOption = updatesInput.snackOption as DaySettings["snackOption"];
+      if (TRIGGERS.includes(updatesInput.triggerOption as string)) updates.triggerOption = updatesInput.triggerOption as DaySettings["triggerOption"];
       if (CARBS.includes(updatesInput.dinnerCarb as string)) updates.dinnerCarb = updatesInput.dinnerCarb as DaySettings["dinnerCarb"];
       if (PROTEINS.includes(updatesInput.dinnerProtein as string)) updates.dinnerProtein = updatesInput.dinnerProtein as DaySettings["dinnerProtein"];
       if (WEIGH_DAY_KEYS.includes(updatesInput.weighInDay as string)) updates.weighInDay = updatesInput.weighInDay as string;

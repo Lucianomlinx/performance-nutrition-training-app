@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import {
   CARB_OPTIONS, DEFAULT_SETTINGS, FOCUS_OPTIONS, GOALS, METABOLIC_STATS,
-  MODE_OPTIONS, PROTEIN_OPTIONS, WEIGH_DAYS, WORKOUTS, addMacros, clampPercent,
+  MODE_OPTIONS, PROTEIN_OPTIONS, SNACK_OPTIONS, TRIGGER_OPTIONS, WEIGH_DAYS, WORKOUTS, addMacros, clampPercent,
   formatDay, formatDecimal, formatInt, getFocusLabel, getFocusSubtitle, getModeLabel,
   getPlannedMeals, getWaterGoal, localDay, shiftDay, type ActivityRecord, type DayData,
   type DaySettings, type FocusKey, type HistoryPoint, type MealSlot, type PlannedMeal,
@@ -682,25 +682,23 @@ export default function Dashboard() {
                     </label>
                     <label>Proteína (Grupo B)
                       <select value={settings.lunchProtein} onChange={(event) => updateSettings({ lunchProtein: event.target.value as DaySettings["lunchProtein"] })} disabled={busy}>
-                        <option value="frangoOvo">Frango (100–110g) + 1 Ovo Cozido</option>
-                        <option value="frangoPuro">Peito de Frango Puro (150g)</option>
-                        <option value="carneMagra">Cortes Bovinos Magros (130–140g)</option>
-                        <option value="lomboAtum">Lombo Suíno (140g) ou Atum + 2 Ovos</option>
+                        {Object.entries(PROTEIN_OPTIONS).map(([key, value]) => <option key={key} value={key}>{value.label} · {value.amount}</option>)}
                       </select>
                     </label>
                   </div>
 
                   <div className="builder-group">
-                    <div className="builder-group-title"><span className="builder-number">02</span><strong>Pré-Treino (14h45)</strong><small>~390 kcal</small></div>
+                    <div className="builder-group-title"><span className="builder-number">02</span><strong>Pré-Treino (14h45)</strong><small>~200–410 kcal</small></div>
                     <label>Combustível da Tarde (Grupo C)
                       <select value={settings.snackOption} onChange={(event) => updateSettings({ snackOption: event.target.value as DaySettings["snackOption"] })} disabled={busy}>
-                        <option value="aveiaWhey">Aveia (40g) + Whey (30g) + 1 Fruta</option>
-                        <option value="romeuJulieta">Pão + Queijo (30g) + Goiabada (25g) + Whey</option>
-                        <option value="paoFrango">2 Fatias Pão + 90g Frango + Fruta (Sem Whey)</option>
+                        {Object.entries(SNACK_OPTIONS).map(([key, value]) => <option key={key} value={key}>{value.title}</option>)}
                       </select>
                     </label>
                     {settings.snackOption === "romeuJulieta" && (
                       <div className="builder-reminder"><Info size={14} /> Romeu & Julieta ativo: ovo e azeite do jantar zerados automaticamente.</div>
+                    )}
+                    {settings.snackOption === "wheyLiquido" && (
+                      <div className="builder-reminder"><Info size={14} /> Opção ultra leve: ideal em dias de apetite travado ou empachamento pela Tirzepatida.</div>
                     )}
                   </div>
 
@@ -713,9 +711,7 @@ export default function Dashboard() {
                     </label>
                     <label>Proteína (Grupo B)
                       <select value={settings.snackOption === "romeuJulieta" ? "frangoPuro" : settings.dinnerProtein} onChange={(event) => updateSettings({ dinnerProtein: event.target.value as DaySettings["dinnerProtein"] })} disabled={busy || settings.snackOption === "romeuJulieta"}>
-                        <option value="frangoOvo">Frango (100–110g) + 1 Ovo</option>
-                        <option value="frangoPuro">Peito de Frango Puro (130g)</option>
-                        <option value="carneMagra">Cortes Bovinos Magros (130–140g)</option>
+                        {Object.entries(PROTEIN_OPTIONS).map(([key, value]) => <option key={key} value={key}>{value.label} · {value.amount}</option>)}
                       </select>
                     </label>
                   </div>
@@ -726,13 +722,11 @@ export default function Dashboard() {
                   <div className="builder-trigger-box">
                     <div className="trigger-box-title">
                       <Flame size={18} />
-                      <strong>Gatilho Ergogênico (17h00) · Exclusivo Dobradinha / Pernas (~90 kcal)</strong>
+                      <strong>Gatilho Ergogênico (17h00) · Exclusivo Dobradinha / Pernas (~45–92 kcal)</strong>
                     </div>
                     <label>Opção de rápida absorção:
                       <select value={settings.triggerOption} onChange={(event) => updateSettings({ triggerOption: event.target.value as DaySettings["triggerOption"] })} disabled={busy}>
-                        <option value="pacoca">1 Paçoca (20g) — 15 min antes do futevôlei</option>
-                        <option value="banana">1 Banana Média (70g) — Carboidrato rápido</option>
-                        <option value="azeitonas">6–8 Azeitonas + 350ml água (Bomba de Sódio / Pernas)</option>
+                        {Object.entries(TRIGGER_OPTIONS).map(([key, value]) => <option key={key} value={key}>{value.title}</option>)}
                       </select>
                     </label>
                   </div>
