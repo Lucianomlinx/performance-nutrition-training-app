@@ -295,6 +295,18 @@ export default function Dashboard() {
   const currentDayOfWeekKey = ["domingo", "segunda", "terca", "quarta", "quinta", "sexta", "sabado"][new Date(`${date}T12:00:00`).getDay()];
   const isOfficialWeighDay = currentDayOfWeekKey === settings.weighInDay;
 
+  // Resumo de aderência semanal (últimos 7 dias com registro)
+  const loggedDays = history.filter((item) => item.calories > 0);
+  const weekDaysCount = loggedDays.length;
+  const weekAvgCalories = weekDaysCount ? loggedDays.reduce((sum, item) => sum + item.calories, 0) / weekDaysCount : 0;
+  const weekAvgProtein = weekDaysCount ? loggedDays.reduce((sum, item) => sum + item.protein, 0) / weekDaysCount : 0;
+  const weekCalorieAdherence = loggedDays.filter((item) => item.calories >= GOALS.calories * 0.9 && item.calories <= GOALS.calories * 1.1).length;
+  const weekHydrationHit = loggedDays.filter((item) => item.water >= waterGoal).length;
+  const weekWorkouts = history.reduce((sum, item) => sum + item.workouts, 0);
+  const weekWeightChange = history.length > 0 && history[0].weight !== null && history[history.length - 1].weight !== null
+    ? (history[history.length - 1].weight as number) - (history[0].weight as number)
+    : null;
+
   async function updateSettings(updates: Partial<DaySettings>) { await save("settings", { updates }); }
   async function registerMeal(meal: PlannedMeal) {
     const okay = await save("food", { mealSlot: meal.slot, title: meal.title, details: meal.ingredients.join(" · "), ...meal.macros, source: "plan" }, "POST", "Refeição adicionada ao seu dia.");
@@ -1154,6 +1166,23 @@ export default function Dashboard() {
                   <span className="chart-legend"><span /> kcal consumidas</span>
                 </div>
                 <WeeklyBars history={history} onPick={pickHistoryDay} />
+              </section>
+
+              {/* RESUMO DE ADESÃO SEMANAL */}
+              <section className="panel progress-chart-panel">
+                <div className="section-heading">
+                  <div>
+                    <span className="panel-kicker">RESUMO DA SEMANA</span>
+                    <h2>Adesão ao Protocolo</h2>
+                    <p>{weekDaysCount > 0 ? `Baseado em ${weekDaysCount} dia${weekDaysCount > 1 ? "s" : ""} registrado${weekDaysCount > 1 ? "s" : ""} nos últimos 7 dias.` : "Ainda sem registros suficientes nesta semana."}</p>
+                  </div>
+                </div>
+                <div className="compact-stats-grid">
+                  <CompactStat icon={Flame} label="Média de calorias" value={weekDaysCount ? `${formatInt(weekAvgCalories)} kcal` : "—"} detail={`${weekCalorieAdherence}/${weekDaysCount || 0} dias na meta (±10%)`} tone="orange" />
+                  <CompactStat icon={ShieldCheck} label="Média de proteína" value={weekDaysCount ? `${formatInt(weekAvgProtein)} g` : "—"} detail={`meta diária de ${GOALS.protein} g`} tone="green" />
+                  <CompactStat icon={Droplets} label="Hidratação" value={`${weekHydrationHit}/${weekDaysCount || 0}`} detail="dias atingindo a meta de água" tone="blue" />
+                  <CompactStat icon={Dumbbell} label="Treinos na semana" value={`${weekWorkouts}`} detail={weekWeightChange !== null ? `${weekWeightChange <= 0 ? "" : "+"}${formatDecimal(weekWeightChange, 1)} kg no período` : "sessões registradas"} tone="violet" />
+                </div>
               </section>
 
               <section className="panel history-panel">

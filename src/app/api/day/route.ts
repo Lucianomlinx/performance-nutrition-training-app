@@ -1,6 +1,6 @@
 import { db } from "@/db";
 import { activityEntries, bodyMeasurements, chatMessages, dailySettings, exerciseEntries, foodEntries, supplementEntries, waterEntries } from "@/db/schema";
-import { CARB_OPTIONS, DEFAULT_SETTINGS, FOCUS_OPTIONS, MODE_OPTIONS, PROTEIN_OPTIONS, WORKOUTS, shiftDay, type DaySettings, type FocusKey, type HistoryPoint, type MealSlot, type TrainingMode, type TriggerKey } from "@/lib/fitness";
+import { CARB_OPTIONS, DEFAULT_SETTINGS, FOCUS_OPTIONS, MODE_OPTIONS, PROTEIN_OPTIONS, WEIGH_DAYS, WORKOUTS, shiftDay, type DaySettings, type FocusKey, type HistoryPoint, type MealSlot, type TrainingMode, type TriggerKey } from "@/lib/fitness";
 import { and, eq, gte, lte } from "drizzle-orm";
 
 export const dynamic = "force-dynamic";
@@ -10,6 +10,7 @@ const PROTEINS = Object.keys(PROTEIN_OPTIONS);
 const SLOTS: MealSlot[] = ["almoco", "lanche", "gatilho", "jantar", "extra"];
 const MODES = MODE_OPTIONS.map((item) => item.key);
 const FOCUSES = FOCUS_OPTIONS.map((item) => item.key);
+const WEIGH_DAY_KEYS = WEIGH_DAYS.map((item) => item.key);
 
 function validDay(day: unknown): day is string {
   if (typeof day !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(day)) return false;
@@ -120,7 +121,7 @@ export async function POST(request: Request) {
       if (["pacoca", "banana", "azeitonas"].includes(updatesInput.triggerOption as string)) updates.triggerOption = updatesInput.triggerOption as TriggerKey;
       if (CARBS.includes(updatesInput.dinnerCarb as string)) updates.dinnerCarb = updatesInput.dinnerCarb as DaySettings["dinnerCarb"];
       if (PROTEINS.includes(updatesInput.dinnerProtein as string)) updates.dinnerProtein = updatesInput.dinnerProtein as DaySettings["dinnerProtein"];
-      if (typeof updatesInput.weighInDay === "string") updates.weighInDay = updatesInput.weighInDay.slice(0, 16);
+      if (WEIGH_DAY_KEYS.includes(updatesInput.weighInDay as string)) updates.weighInDay = updatesInput.weighInDay as string;
       if (Object.keys(updates).length === 0) return error("Nenhuma preferência válida foi enviada.");
       await db.insert(dailySettings).values({ day, ...updates }).onConflictDoUpdate({
         target: dailySettings.day,
