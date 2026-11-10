@@ -2,4 +2,5 @@
 .env
 drizzle.config.json
 node_modules
-.nexttsconfig.tsbuildinfo
+.next
+tsconfig.tsbuildinfo
