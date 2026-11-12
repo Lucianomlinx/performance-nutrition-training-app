@@ -1256,9 +1256,9 @@ export default function Dashboard() {
                   return (
                     <>
                       <svg className="weight-svg" viewBox="0 0 300 110" preserveAspectRatio="none" aria-label="Gráfico de tendência de peso">
-                        <line x1="0" y1="93" x2="300" y2="93" stroke="#35453d" strokeDasharray="4 5" />
-                        <polyline points={points} fill="none" stroke="#d1f56c" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
-                        {list.map((item, index) => <circle key={item.day} cx={20 + (index * 260) / (list.length - 1)} cy={90 - ((item.weight - min) / (max - min)) * 70} r="4" fill="#d1f56c" />)}
+                        <line x1="0" y1="93" x2="300" y2="93" stroke="#2a2e35" strokeDasharray="4 5" />
+                        <polyline points={points} fill="none" stroke="#c8ff5c" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+                        {list.map((item, index) => <circle key={item.day} cx={20 + (index * 260) / (list.length - 1)} cy={90 - ((item.weight - min) / (max - min)) * 70} r="4" fill="#c8ff5c" />)}
                       </svg>
                       <div className="weight-axis">
                         <span>{formatDay(list[0].day, { day: "numeric", month: "short" })}</span>
